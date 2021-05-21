@@ -208,7 +208,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             toolbar.title = getString(R.string.menu_compter_label)
             mGenre = 4
         }else if(id==R.id.nav_favorite){
-            toolbar.title=getString(R.string.menu_favorite_label)
+            //toolbar.title=getString(R.string.menu_favorite_label)
             val intent = Intent(applicationContext,FavoriteActivity::class.java)
             startActivity(intent)
             return true

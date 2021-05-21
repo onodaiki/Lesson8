@@ -162,6 +162,11 @@ class FavoriteActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_favorite_activity)
 
+
+    }
+
+    override fun onResume() {
+        super.onResume()
         listView.setOnItemClickListener{parent, view, position, id ->
             // Questionのインスタンスを渡して質問詳細画面を起動する
             val intent = Intent(applicationContext, QuestionDetailActivity::class.java)
@@ -190,10 +195,7 @@ class FavoriteActivity : AppCompatActivity() {
         //mGenreRef=mDatabaseReference.child(ContentsPATH).child(user!!.uid)
         //mGenreRef!!.addChildEventListener(mEventListener)
 
-    }
 
-    override fun onResume() {
-        super.onResume()
 
     }
 }

@@ -80,28 +80,48 @@ class QuestionDetailActivity : AppCompatActivity() {
         listView.adapter = mAdapter
         mAdapter.notifyDataSetChanged()
 
+
+
         val user = FirebaseAuth.getInstance().currentUser
-        /*
-        if(user==null){
-            fab_favorite.hide()
-        }else{
-            fab_favorite.show()
-        }
-        */
+
         mDataBaseReference = FirebaseDatabase.getInstance().reference
         mAuth = FirebaseAuth.getInstance()
-
+        /*
         val questionUid=mQuestion.questionUid
         val genre =mQuestion.genre.toString()
-        val favoriteRef = mDataBaseReference.child(FaivoritesPATH).child(user!!.uid).child(questionUid)
+        val favoriteRef :DatabaseReference?= mDataBaseReference.child(FaivoritesPATH).child(user!!.uid).child(questionUid)
         val gdata = HashMap<String, String>()
         gdata["genre"]=genre
+
+         */
         if(user==null){
             fab_favorite.hide()
         }else {
+            val questionUid=mQuestion.questionUid
+            val genre =mQuestion.genre.toString()
+            val favoriteRef :DatabaseReference?= mDataBaseReference.child(FaivoritesPATH).child(user!!.uid).child(questionUid)
+            val gdata = HashMap<String, String>()
+            gdata["genre"]=genre
+            favoriteRef!!.addListenerForSingleValueEvent(object :ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val idata = snapshot.value as Map<*, *>?
+
+                    Log.d("text",idata.toString())
+                    if(idata==null) {
+                        jude=2
+                        fab_favorite.setImageResource(R.drawable.ic_favorite)
+                    }else if(idata!=null){
+                        jude=3
+                        fab_favorite.setImageResource(R.drawable.ic_favorite_m)
+                    }
+                }
+                override fun onCancelled(firebaseError: DatabaseError) {}
+            })
+
             fab_favorite.show()
         }
-        favoriteRef.addListenerForSingleValueEvent(object :ValueEventListener{
+        /*
+        favoriteRef!!.addListenerForSingleValueEvent(object :ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 val idata = snapshot.value as Map<*, *>?
 
@@ -118,7 +138,7 @@ class QuestionDetailActivity : AppCompatActivity() {
         })
 
 
-
+*/
 
 
 
@@ -151,31 +171,69 @@ class QuestionDetailActivity : AppCompatActivity() {
         mDataBaseReference = FirebaseDatabase.getInstance().reference
         mAuth = FirebaseAuth.getInstance()
         val user = FirebaseAuth.getInstance().currentUser
-        val questionUid=mQuestion.questionUid
-        val genre =mQuestion.genre.toString()
+        /*
+        val questionUid = mQuestion.questionUid
+        val genre = mQuestion.genre.toString()
         val favoriteRef = mDataBaseReference.child(FaivoritesPATH).child(user!!.uid).child(questionUid)
         val gdata = HashMap<String, String>()
-        gdata["genre"]=genre
-        if(user==null){
+        gdata["genre"] = genre
+
+         */
+        if (user == null) {
             fab_favorite.hide()
-        }else {
-            fab_favorite.show()
-        }
-            favoriteRef.addListenerForSingleValueEvent(object :ValueEventListener{
+        } else {
+            val questionUid = mQuestion.questionUid
+            val genre = mQuestion.genre.toString()
+            val favoriteRef = mDataBaseReference.child(FaivoritesPATH).child(user!!.uid).child(questionUid)
+            val gdata = HashMap<String, String>()
+            gdata["genre"] = genre
+            favoriteRef.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val idata = snapshot.value as Map<*, *>?
 
-                    Log.d("text",idata.toString())
-                    if(idata==null) {
-                        jude=2
-                    }else{
-                        jude=3
+                    Log.d("text", idata.toString())
+                    if (idata == null) {
+                        jude = 2
+                    } else {
+                        jude = 3
                     }
                 }
+
                 override fun onCancelled(firebaseError: DatabaseError) {}
             })
+            fab_favorite.setOnClickListener {
+                if(jude%2==0){
+                    favoriteRef.setValue(gdata)
+                    fab_favorite.setImageResource(R.drawable.ic_favorite_m)
+                }else{
+                    favoriteRef.removeValue()
+                    fab_favorite.setImageResource(R.drawable.ic_favorite)
+                }
+                jude++
+            }
+            fab_favorite.show()
 
 
+/*
+        favoriteRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val idata = snapshot.value as Map<*, *>?
+
+                Log.d("text", idata.toString())
+                if (idata == null) {
+                    jude = 2
+                } else {
+                    jude = 3
+                }
+            }
+
+            override fun onCancelled(firebaseError: DatabaseError) {}
+        })
+*/
+
+
+    }
+        /*
         fab_favorite.setOnClickListener {
            if(jude%2==0){
                favoriteRef.setValue(gdata)
@@ -186,7 +244,7 @@ class QuestionDetailActivity : AppCompatActivity() {
            }
             jude++
         }
-
+*/
 
     }
 }

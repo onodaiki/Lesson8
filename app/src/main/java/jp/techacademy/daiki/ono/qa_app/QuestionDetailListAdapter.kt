@@ -83,45 +83,7 @@ class QuestionDetailListAdapter(context: Context, private val mQustion: Question
                 val imageView = convertView.findViewById<View>(R.id.imageView) as ImageView
                 imageView.setImageBitmap(image)
             }
-            val favoriteButton=convertView.favoriteButton as Button
-            if(user==null){
-                favoriteButton.visibility=View.INVISIBLE
-            }else{//ログインしているとき
-                favoriteButton.visibility=View.VISIBLE
-            }
 
-            favoriteButton.setOnClickListener {
-                val user = mAuth.currentUser
-                val questionUid=mQustion.questionUid
-                val genre=mQustion.genre.toString()
-
-
-                val favoriteRef = mDataBaseReference.child(FaivoritesPATH).child(user!!.uid)
-                val deleteRef = mDataBaseReference.child(FaivoritesPATH).child(user!!.uid)
-                val data = HashMap<String, String>()
-                data["questionUid"]=questionUid
-                data["genre"]=genre
-
-                favoriteRef.addListenerForSingleValueEvent(object :ValueEventListener{
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        val idata = snapshot.value as Map<*, *>?
-                        Log.d("text",idata.toString())
-                        if(idata==null) {
-                            favoriteRef.push().setValue(data)
-                        }
-                    }
-
-
-
-                    override fun onCancelled(firebaseError: DatabaseError) {}
-                })
-                //mDataBaseReference.child(FaivoritesPATH).child(user!!.uid).get()
-                //favoriteRef.push().setValue(data)
-
-                    //favoriteRef.setValue(null)
-                //favoriteRef.removeValue()
-
-            }
         } else {
             if (convertView == null) {
                 convertView = mLayoutInflater!!.inflate(R.layout.list_answer, parent, false)!!
